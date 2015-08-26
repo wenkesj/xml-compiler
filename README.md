@@ -21,7 +21,7 @@ let docPaths = ['test.xml'];
 // let depPaths = ['./builder.js'];
 
 /** Initialize the compiler. */
-let xmlCompiler = new XMLCompiler(docPaths, depPaths);
+let xmlCompiler = new XMLCompiler(docPaths /*, depPaths*/);
 
 /** Invoke the toJSON promise. */
 xmlCompiler.toJSON().then(() => {
