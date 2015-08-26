@@ -25,7 +25,7 @@ let xmlCompiler = new XMLCompiler(docPaths /*, depPaths*/);
 
 /** Invoke the toJSON promise. */
 xmlCompiler.toJSON().then(() => {
-
+    /* Finished compiling ... */
 }).catch((err) => {
     if (err) {
         console.log(err);
