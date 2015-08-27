@@ -42,9 +42,10 @@ docs.forEach(function(doc) {
 
 ```
 ## API ##
-### `new XMLCompiler(docPaths, depPaths)` ###
-+ `docPaths` { Array } of xml files
-+ `[Optional] depPaths` { Array }
+### `new XMLCompiler()` ###
 
-### `XMLCompiler.toJSON()` ###
+### `XMLCompiler.toJSON(doc)` ###
++ `doc` { Object } with params:
+    + `docPaths` { Array } of xml files
+    + `depPaths` { Array } of js files [optional]
 + Returns a Promise and outputs the JSON file into the parent directory.
