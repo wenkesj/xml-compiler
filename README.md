@@ -13,7 +13,7 @@ import XMLCompiler from 'xml-compiler';
 ## Example ##
 ```js
 /** Import the compiler */
-import XMLCompiler from '../src/compiler';
+import XMLCompiler from 'xml-compiler';
 
 /**
  * Set the path for the files to compile,
