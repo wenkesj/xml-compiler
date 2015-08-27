@@ -3,7 +3,7 @@
 ```bash
 npm install xml-compiler --save
 ```
-### Note work looking at ###
+### Note worth looking at ###
 This is made from mostly pure ES6, I advise using `babel-node` when developing
 ## Requiring ##
 ```js
