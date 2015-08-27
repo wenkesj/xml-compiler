@@ -3,6 +3,8 @@
 ```bash
 npm install xml-compiler --save
 ```
+### Note worth looking at ###
+This is made from mostly pure ES6, I advise using `babel-node` when developing
 ## Requiring ##
 ```js
 import XMLCompiler from 'xml-compiler';
@@ -21,11 +23,11 @@ let docPaths = ['test.xml'];
 // let depPaths = ['./builder.js'];
 
 /** Initialize the compiler. */
-let xmlCompiler = new XMLCompiler(docPaths, depPaths);
+let xmlCompiler = new XMLCompiler(docPaths /*, depPaths*/);
 
 /** Invoke the toJSON promise. */
 xmlCompiler.toJSON().then(() => {
-
+    /* Finished compiling ... */
 }).catch((err) => {
     if (err) {
         console.log(err);
