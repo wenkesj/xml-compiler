@@ -14,7 +14,7 @@ const jsExt = '.js';
  */
 export default class XMLCompiler {
     constructor() {
-        this.buildQueue = [];
+        this.buildLine = [];
     }
 
     /**
@@ -31,7 +31,7 @@ export default class XMLCompiler {
 
             /** Create the files. */
             this.create(docPaths, depPaths).then(() => {
-
+                resolve(this.buildLine);
             }).catch((err) => {
                 if (err) {
                     return reject(err);
@@ -47,7 +47,7 @@ export default class XMLCompiler {
      */
     create(docPaths, depPaths) {
         return new Promise((resolve, reject) => {
-            docPaths.forEach((docPath) => {
+            docPaths.forEach((docPath, index) => {
                 let file = Path.join(__dirname, docPath);
                 let doc = Path.parse(file);
                 let source = `../${doc.name}${jsExt}`;
@@ -70,9 +70,11 @@ export default class XMLCompiler {
 
                     /** Read and build the files. */
                     this.read(docPath).then((build) => {
-
+                        this.buildLine.push(build);
                         this.build(build, source).then((res) => {
-                            resolve(res);
+                            if (index === docPaths.length - 1) {
+                                return resolve();
+                            }
                         }).catch((err) => {
                             if (err) {
                                 return reject(err);
@@ -83,7 +85,6 @@ export default class XMLCompiler {
                             return reject(err);
                         }
                     });
-
                 });
             });
         });

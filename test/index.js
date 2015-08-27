@@ -19,8 +19,8 @@ let xmlCompiler = new XMLCompiler();
 
 /** Invoke the toJSON promise. */
 docs.forEach(function(doc) {
-    xmlCompiler.toJSON(doc).then(() => {
-        console.log('Finished Compiling!');
+    xmlCompiler.toJSON(doc).then((res) => {
+        console.log('Finished Compiling!', res);
     }).catch((err) => {
         if (err) {
             console.log('Oops something went wrong with this one!');
