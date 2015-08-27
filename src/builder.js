@@ -5,30 +5,28 @@ import format from 'format-json';
 
 const jsonExt = '.json';
 export default class Builder {
-    constructor(buildQueue, destination) {
-        this.buildQueue = buildQueue;
-        this.destination = destination;
+    constructor(build, source) {
+        this.build = build;
+        this.destination = source;
         this.classList = [];
         this.attributeList = [];
         this.keyValueList = [];
     }
 
-    construct() {
+    construct(build, source) {
         return new Promise((resolve, reject) => {
-            this.buildQueue.forEach((build) => {
-                this.outputJSON(build).then((source) => {
-                    this.importJSON(source).then((res) => {
-                        resolve(format.plain(build));
-                    }).catch((err) => {
-                        if (err) {
-                            return console.error(err);
-                        }
-                    });
+            this.outputJSON(this.build).then((source) => {
+                this.importJSON(source).then((res) => {
+                    resolve(format.plain(build));
                 }).catch((err) => {
                     if (err) {
                         return console.error(err);
                     }
                 });
+            }).catch((err) => {
+                if (err) {
+                    return console.error(err);
+                }
             });
             resolve(this.classList);
         });

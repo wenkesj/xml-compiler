@@ -7,17 +7,23 @@ import XMLCompiler from '../src/compiler';
  * Set the path for the files to compile,
  * Set the path for the dependencies to be imported to the file.
  */
-let docPaths = ['test.xml'];
-let depPaths = ['./builder.js'];
+let docs = [
+    {
+        docPaths: ['test.xml', 'test2.xml'],
+        depPaths: ['./builder.js']
+    }
+];
 
 /** Initialize the compiler. */
-let xmlCompiler = new XMLCompiler(docPaths, depPaths);
+let xmlCompiler = new XMLCompiler();
 
 /** Invoke the toJSON promise. */
-xmlCompiler.toJSON().then(() => {
-    
-}).catch((err) => {
-    if (err) {
-        console.log(err);
-    }
+docs.forEach(function(doc) {
+    xmlCompiler.toJSON(doc).then(() => {
+        console.log('Finished Compiling!');
+    }).catch((err) => {
+        if (err) {
+            console.log('Oops something went wrong with this one!');
+        }
+    });
 });

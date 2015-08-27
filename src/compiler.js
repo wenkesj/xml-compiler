@@ -4,7 +4,6 @@ import Path from 'path';
 import jxon from 'jxon';
 import Builder from './builder';
 
-let source;
 const charSet = 'utf-8';
 const jsExt = '.js';
 
@@ -14,34 +13,65 @@ const jsExt = '.js';
  * @arg {Array} depPaths
  */
 export default class XMLCompiler {
-    constructor(docPaths, depPaths) {
-        this.docPaths = docPaths;
-        this.depPaths = depPaths ? depPaths : [];
+    constructor() {
         this.buildQueue = [];
     }
 
     /**
      * Runs the compiler.
-     * @arg {Array} docPaths
-     * @arg {Array} depPaths
+     * @arg {Object} docs
+     * @param { Array } docs.docPaths
+     * @param { Array } docs.depPaths
      */
-    toJSON() {
+    toJSON(docs) {
+        let docPaths = docs.docPaths ? docs.docPaths : [];
+        let depPaths = docs.depPaths ? docs.depPaths : [];
         /** Create the promise chain. */
         return new Promise((resolve, reject) => {
 
             /** Create the files. */
-            this.create().then(() => {
+            this.create(docPaths, depPaths).then(() => {
 
-                /** Read the dependencies. */
-                this.readDependencies().then(() => {
+            }).catch((err) => {
+                if (err) {
+                    return reject(err);
+                }
+            });
+        });
+    }
 
-                    /** Read the files. */
-                    this.read().then(() => {
+    /**
+     * Creates a new javascript file.
+     * @arg { Array } docPaths
+     * @arg { Array } depPaths
+     */
+    create(docPaths, depPaths) {
+        return new Promise((resolve, reject) => {
+            docPaths.forEach((docPath) => {
+                let file = Path.join(__dirname, docPath);
+                let doc = Path.parse(file);
+                let source = `../${doc.name}${jsExt}`;
+                let data = `/** ${doc.name}${jsExt} generated file */\n`;
+                fs.writeFile(source, data, (err) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                        /** Builds the files. */
-                        this.build().then((res) => {
+                    /** Read the dependency files. */
+                    if (depPaths[0]) {
+                        this.readDependencies(depPaths, source).then(() => {
 
-                            /** Finish. */
+                        }).catch((err) => {
+                            if (err) {
+                                return reject(err);
+                            }
+                        });
+                    }
+
+                    /** Read and build the files. */
+                    this.read(docPath).then((build) => {
+
+                        this.build(build, source).then((res) => {
                             resolve(res);
                         }).catch((err) => {
                             if (err) {
@@ -53,48 +83,19 @@ export default class XMLCompiler {
                             return reject(err);
                         }
                     });
-                }).catch((err) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                });
-            }).catch((err) => {
-                if (err) {
-                    return reject(err);
-                }
-            });
-        });
-    }
 
-    /**
-     * Creates a new javascript file.
-     * @arg {Function} callback
-     */
-    create(callback) {
-        return new Promise((resolve, reject) => {
-            this.docPaths.forEach((docPath) => {
-                let file = Path.join(__dirname, docPath);
-                let doc = Path.parse(file);
-                    source = `../${doc.name}${jsExt}`;
-                let data = `/** ${doc.name}${jsExt} generated file */\n`;
-                fs.writeFile(source, data, function(err) {
-                    if (err) {
-                        return reject(err);
-                    }
                 });
             });
-            resolve();
         });
     }
 
     /**
      * Reads the dependencies from source and appends them.
-     * @arg {Array} paths
-     * @arg {Function} callback
+     * @arg { Array } depPaths
      */
-    readDependencies() {
+    readDependencies(depPaths, source) {
         return new Promise((resolve, reject) => {
-            this.depPaths.forEach((path) => {
+            depPaths.forEach((path) => {
                 let doc = Path.parse(path);
                 let data = `import ${doc.name} from '${path}';\n`;
                 fs.appendFile(source, data, function(err) {
@@ -109,11 +110,13 @@ export default class XMLCompiler {
 
     /**
      * Iterates over the buildQueue to find special keys.
+     * @arg { Object } doc
+     * @arg { String } source
      */
-    build() {
+    build(doc, source) {
         return new Promise((resolve, reject) => {
             /* Assign a builder to handle the construction. */
-            let _builder = new Builder(this.buildQueue, source);
+            let _builder = new Builder(doc, source);
             _builder.construct().then((result) => {
                 resolve(result);
             }).catch((err) => {
@@ -127,14 +130,17 @@ export default class XMLCompiler {
     /**
      * Reads a file and turns it into JSON trees.
      * Populates the buildQueue.
+     * @arg { String } docPath
      */
-    read() {
+    read(docPath) {
         return new Promise((resolve, reject) => {
-            this.docPaths.forEach((docPath) => {
-                let xml = jxon.stringToXml(fs.readFileSync(docPath, charSet));
-                this.buildQueue.push(jxon.build(xml));
+            fs.readFile(docPath, charSet, (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                let xml = jxon.stringToXml(data);
+                resolve(jxon.build(xml));
             });
-            resolve();
         });
     }
 }
