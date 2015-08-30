@@ -12,6 +12,8 @@ import XMLCompiler from 'xml-compiler';
 
 ## Example ##
 ```js
+/* jshint esnext: true */
+
 /** Import the compiler */
 import XMLCompiler from 'xml-compiler';
 
@@ -19,10 +21,21 @@ import XMLCompiler from 'xml-compiler';
  * Set the path for the files to compile,
  * Set the path for the dependencies to be imported to the file.
  */
-let docs = [
+let xmlDocs = [
     {
         docPaths: ['test.xml', 'test2.xml'],
-        depPaths: ['./builder.js']
+        // depPaths: ['dependency.js'],
+        /* Optional reference to outputting JS files that require the JSON/dependencies */
+        jsOut: false
+    }
+];
+
+/**
+ * Set the path for the files to compile,
+ */
+let jsonDocs = [
+    {
+        docPaths: ['test.json', 'test2.json']
     }
 ];
 
@@ -30,7 +43,7 @@ let docs = [
 let xmlCompiler = new XMLCompiler();
 
 /** Invoke the toJSON promise. */
-docs.forEach(function(doc) {
+xmlDocs.forEach(function(doc) {
     xmlCompiler.toJSON(doc).then((res) => {
         console.log('Finished Compiling!', res);
     }).catch((err) => {
@@ -40,9 +53,19 @@ docs.forEach(function(doc) {
     });
 });
 
+/** Invoke the toXML promise. */
+jsonDocs.forEach(function(doc) {
+    xmlCompiler.toXML(doc).then((res) => {
+        console.log('Finished Compiling!', res);
+    }).catch((err) => {
+        if (err) {
+            console.log('Oops something went wrong with this one!');
+        }
+    });
 ```
 ## API ##
-### `new XMLCompiler()` ###
+### `new XMLCompiler(config)` ###
++ `config { Object }` https://www.npmjs.com/package/jxon [optional]
 
 ### `XMLCompiler.toJSON(doc)` ###
 + `doc` { Object } with params:

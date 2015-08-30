@@ -5,32 +5,61 @@ import jxon from 'jxon';
 import Builder from './builder';
 
 const charSet = 'utf-8';
-const jsExt = '.js';
+const _jsExt = '.js';
+const _xmlExt = '.xml';
 
 /**
  * Compiles the xml to javascript flavors.
- * @arg {Array} docPaths
- * @arg {Array} depPaths
+ * @arg { Object } options, { jsOut, ... }
+ * @arg { Object } jxonConfig, https://www.npmjs.com/package/jxon
  */
 export default class XMLCompiler {
-    constructor() {
+    constructor(jxonConfig) {
         this.buildLine = [];
+        if (jxonConfig) {
+            jxon.config(jxonConfig);
+        }
     }
 
     /**
-     * Runs the compiler.
+     * Converts the XML doc to JSON.
      * @arg {Object} docs
      * @param { Array } docs.docPaths
      * @param { Array } docs.depPaths
+     * @param { Boolean } docs.jsOut
      */
     toJSON(docs) {
         let docPaths = docs.docPaths ? docs.docPaths : [];
         let depPaths = docs.depPaths ? docs.depPaths : [];
+        let jsOut = docs.jsOut ? docs.jsOut : false;
         /** Create the promise chain. */
         return new Promise((resolve, reject) => {
 
             /** Create the files. */
-            this.create(docPaths, depPaths).then(() => {
+            this.create(_jsExt, jsOut, docPaths, depPaths).then(() => {
+                resolve(this.buildLine);
+            }).catch((err) => {
+                if (err) {
+                    return reject(err);
+                }
+            });
+        });
+    }
+
+    /**
+     * Converts the JSON doc to XML.
+     * @arg {Object} docs
+     * @param { Array } docs.docPaths
+     */
+    toXML(docs) {
+        let docPaths = docs.docPaths ? docs.docPaths : [];
+        let depPaths = docs.depPaths ? docs.depPaths : [];
+
+        /** Create the promise chain. */
+        return new Promise((resolve, reject) => {
+
+            /** Create the files. */
+            this.create(_xmlExt, false, docPaths, depPaths).then(() => {
                 resolve(this.buildLine);
             }).catch((err) => {
                 if (err) {
@@ -45,13 +74,24 @@ export default class XMLCompiler {
      * @arg { Array } docPaths
      * @arg { Array } depPaths
      */
-    create(docPaths, depPaths) {
+    create(ext, jsOut, docPaths, depPaths) {
         return new Promise((resolve, reject) => {
             docPaths.forEach((docPath, index) => {
                 let file = Path.join(__dirname, docPath);
                 let doc = Path.parse(file);
-                let source = `../${doc.name}${jsExt}`;
-                let data = `/** ${doc.name}${jsExt} generated file */\n`;
+                let source = `../${doc.name}${ext}`;
+                let data = `/** ${doc.name}${ext} generated file */\n`;
+
+                if (!jsOut) {
+                    return this.promoteRead(ext, jsOut, docPath, docPath, source).then(() => {
+                        resolve();
+                    }).catch((err) => {
+                        if (err) {
+                            return reject();
+                        }
+                    });
+                }
+
                 fs.writeFile(source, data, (err) => {
                     if (err) {
                         return reject(err);
@@ -67,25 +107,41 @@ export default class XMLCompiler {
                             }
                         });
                     }
-
-                    /** Read and build the files. */
-                    this.read(docPath).then((build) => {
-                        this.buildLine.push(build);
-                        this.build(build, source).then((res) => {
-                            if (index === docPaths.length - 1) {
-                                return resolve();
-                            }
-                        }).catch((err) => {
-                            if (err) {
-                                return reject(err);
-                            }
-                        });
+                    this.promoteRead(ext, jsOut, docPath, docPaths, source).then(() => {
+                        resolve();
                     }).catch((err) => {
                         if (err) {
-                            return reject(err);
+                            return reject();
                         }
                     });
                 });
+            });
+        });
+    }
+
+    /**
+     * Performs the read and build process.
+     * @arg {Object} docs
+     * @param { Array } docs.docPaths
+     * @param { Array } docs.depPaths
+     */
+    promoteRead(ext, jsOut, docPath, docPaths, source) {
+        return new Promise((resolve, reject) => {
+            this.read(ext, docPath).then((build) => {
+                this.buildLine.push(build);
+                this.build(build, source, ext, jsOut).then((res) => {
+                    if (index === docPaths.length - 1) {
+                        return resolve();
+                    }
+                }).catch((err) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                });
+            }).catch((err) => {
+                if (err) {
+                    return reject(err);
+                }
             });
         });
     }
@@ -114,11 +170,11 @@ export default class XMLCompiler {
      * @arg { Object } doc
      * @arg { String } source
      */
-    build(doc, source) {
+    build(doc, source, ext, jsOut) {
         return new Promise((resolve, reject) => {
             /* Assign a builder to handle the construction. */
-            let _builder = new Builder(doc, source);
-            _builder.construct().then((result) => {
+            let _builder = new Builder();
+            _builder.construct(doc, source, ext, jsOut).then((result) => {
                 resolve(result);
             }).catch((err) => {
                 if (err) {
@@ -133,11 +189,15 @@ export default class XMLCompiler {
      * Populates the buildQueue.
      * @arg { String } docPath
      */
-    read(docPath) {
+    read(ext, docPath) {
         return new Promise((resolve, reject) => {
             fs.readFile(docPath, charSet, (err, data) => {
                 if (err) {
                     return reject(err);
+                }
+                if (ext === '.xml') {
+                    let json = JSON.parse(data);
+                    return resolve(jxon.unbuild(json));
                 }
                 let xml = jxon.stringToXml(data);
                 resolve(jxon.build(xml));

@@ -1,13 +1,14 @@
 {
-    "name": "xml-compiler",
-    "version": "0.0.6",
-    "description": "An easy to use component framework built for building.",
-    "author": "Sam Wenke",
-    "license": "MIT",
-    "preferGlobal": true,
-    "main": "life.js",
-    "dependencies": {
-        "format-json": "^1.0.3",
-        "jxon": "^1.5.4"
-    }
+  "name": "xml-compiler",
+  "version": "0.0.7",
+  "description": "An easy to use component framework built for building.",
+  "author": "Sam Wenke",
+  "license": "MIT",
+  "preferGlobal": true,
+  "main": "life.js",
+  "dependencies": {
+    "format-json": "^1.0.3",
+    "formattor": "0.0.2",
+    "jxon": "^1.5.4"
+  }
 }
