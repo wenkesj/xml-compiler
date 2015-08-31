@@ -9,7 +9,7 @@ import XMLCompiler from '../src/compiler';
  */
 let xmlDocs = [
     {
-        docPaths: ['test.xml', 'test2.xml'],
+        docPaths: ['test.xml', 'test2.xml', 'test3.xml'],
         jsOut: false
     }
 ];
@@ -19,7 +19,7 @@ let xmlDocs = [
  */
 let jsonDocs = [
     {
-        docPaths: ['test.json', 'test2.json']
+        docPaths: ['test.json', 'test2.json', 'test3.json']
     }
 ];
 
@@ -27,9 +27,10 @@ let jsonDocs = [
 let xmlCompiler = new XMLCompiler();
 
 /** Invoke the toJSON promise. */
+console.time('toJSON');
 xmlDocs.forEach(function(doc) {
     xmlCompiler.toJSON(doc).then((res) => {
-        console.log('Finished Compiling!', res);
+        console.timeEnd('toJSON');
     }).catch((err) => {
         if (err) {
             console.log('Oops something went wrong with this one!');
@@ -38,9 +39,10 @@ xmlDocs.forEach(function(doc) {
 });
 
 /** Invoke the toXML promise. */
+console.time('toXML');
 jsonDocs.forEach(function(doc) {
     xmlCompiler.toXML(doc).then((res) => {
-        console.log('Finished Compiling!', res);
+        console.timeEnd('toXML');
     }).catch((err) => {
         if (err) {
             console.log('Oops something went wrong with this one!');

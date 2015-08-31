@@ -1,11 +1,11 @@
 {
   "name": "xml-compiler",
-  "version": "0.0.7",
-  "description": "An easy to use component framework built for building.",
+  "version": "0.0.8",
+  "description": "A fast, promise based, XML and JSON compiler based on JXON",
   "author": "Sam Wenke",
   "license": "MIT",
   "preferGlobal": true,
-  "main": "life.js",
+  "main": "./compiler.js",
   "dependencies": {
     "format-json": "^1.0.3",
     "formattor": "0.0.2",

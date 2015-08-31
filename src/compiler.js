@@ -130,9 +130,8 @@ export default class XMLCompiler {
             this.read(ext, docPath).then((build) => {
                 this.buildLine.push(build);
                 this.build(build, source, ext, jsOut).then((res) => {
-                    if (index === docPaths.length - 1) {
-                        return resolve();
-                    }
+                    console.info('File added ',`${Path.parse(source).name}${ext === '.js' ? '.json' : '.xml'}`);
+                    return resolve();
                 }).catch((err) => {
                     if (err) {
                         return reject(err);
