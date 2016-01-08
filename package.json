@@ -1,6 +1,6 @@
 {
   "name": "xml-compiler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "XML and JSON compiler based on JXON",
   "author": "Sam Wenke",
   "license": "MIT",
