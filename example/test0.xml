@@ -1,0 +1,6 @@
+<div id="form_container">
+  <input type="hidden" name="instId" value="1234" />
+  <input type="hidden" name="currency" value="GBP" />
+  <input type="hidden" name="amount" value="0" />
+  <input type="hidden" name="name" value="CAPTURED" />
+</div>

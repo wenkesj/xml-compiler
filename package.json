@@ -10,5 +10,8 @@
     "format-json": "^1.0.3",
     "formattor": "0.0.2",
     "jxon": "^1.5.4"
+  },
+  "devDependencies": {
+    "workmen": "^1.0.1"
   }
 }

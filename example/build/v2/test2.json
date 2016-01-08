@@ -1,0 +1,105 @@
+{
+  "div": {
+    "form": {
+      "input": [
+        {
+          "@type": "hidden",
+          "@name": "instId",
+          "@value": 1234
+        },
+        {
+          "@type": "hidden",
+          "@name": "currency",
+          "@value": "GBP"
+        },
+        {
+          "@type": "hidden",
+          "@name": "amount",
+          "@value": 0
+        },
+        {
+          "@type": "hidden",
+          "@name": "name",
+          "@value": "CAPTURED"
+        }
+      ],
+      "table": {
+        "tr": [
+          {
+            "th": {
+              "@style": "text-align: right;",
+              "keyValue": "Product:"
+            },
+            "td": {
+              "span": [
+                {
+                  "input": {
+                    "@type": "radio",
+                    "@name": "nome",
+                    "@id": "rel_tshirt",
+                    "@value": "tshirt"
+                  },
+                  "label": {
+                    "@for": "rel_tshirt",
+                    "keyValue": "T-Shirt"
+                  },
+                  "@class": "product"
+                },
+                {
+                  "input": {
+                    "@type": "radio",
+                    "@name": "nome",
+                    "@id": "rel_trousers",
+                    "@value": "trousers"
+                  },
+                  "label": {
+                    "@for": "rel_trousers",
+                    "keyValue": "Trousers"
+                  },
+                  "@class": "product"
+                },
+                {
+                  "input": {
+                    "@type": "radio",
+                    "@name": "nome",
+                    "@id": "rel_pullover",
+                    "@value": "pullover"
+                  },
+                  "label": {
+                    "@for": "rel_pullover",
+                    "keyValue": "Pullover"
+                  },
+                  "@class": "product"
+                }
+              ]
+            }
+          },
+          {
+            "th": {
+              "@style": "text-align: right;",
+              "keyValue": "Quantity:"
+            },
+            "td": {
+              "input": {
+                "@type": "text",
+                "@name": "myInput",
+                "@onkeypress": "return numbersOnly(this, event);",
+                "@onpaste": "return false;"
+              }
+            }
+          }
+        ]
+      },
+      "p": {
+        "input": {
+          "@type": "submit",
+          "@value": "Purchase!"
+        }
+      },
+      "@action": "https://secure-test.worldpay.com/wcc/purchase",
+      "@name": "BuyForm",
+      "@method": "POST"
+    },
+    "@id": "form_container"
+  }
+}

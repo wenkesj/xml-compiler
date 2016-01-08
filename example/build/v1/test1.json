@@ -1,0 +1,55 @@
+{
+  "catalog": {
+    "product": {
+      "catalog_item": [
+        {
+          "item_number": "QWZ5671",
+          "price": 39.95,
+          "size": [
+            {
+              "color_swatch": [
+                {
+                  "@image": "red_cardigan.jpg",
+                  "keyValue": "Red"
+                },
+                {
+                  "@image": "burgundy_cardigan.jpg",
+                  "keyValue": "Burgundy"
+                }
+              ],
+              "@description": "Medium"
+            },
+            {
+              "color_swatch": [
+                {
+                  "@image": "red_cardigan.jpg",
+                  "keyValue": "Red"
+                },
+                {
+                  "@image": "burgundy_cardigan.jpg",
+                  "keyValue": "Burgundy"
+                }
+              ],
+              "@description": "Large"
+            }
+          ],
+          "@gender": "Men's"
+        },
+        {
+          "item_number": "RRX9856",
+          "discount_until": "1995-12-25T05:00:00.000Z",
+          "price": 42.5,
+          "size": {
+            "color_swatch": {
+              "@image": "black_cardigan.jpg",
+              "keyValue": "Black"
+            },
+            "@description": "Medium"
+          },
+          "@gender": "Women's"
+        }
+      ],
+      "@description": "Cardigan Sweater"
+    }
+  }
+}

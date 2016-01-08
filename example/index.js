@@ -1,17 +1,11 @@
-var XMLCompiler = require('../index');
-var xmlCompiler = new XMLCompiler();
-
+var build = require('./build');
 var xmlQueue = [{
-  docPaths: ['example/test.xml', 'example/test2.xml', 'example/test3.xml'],
-  destDir: 'example',
-  jsOut: false
+  docPaths: ['example/test0.xml', 'example/test1.xml'],
+  destDir: 'example/build/v1'
+},
+{
+  docPaths: ['example/test2.xml', 'example/test3.xml'],
+  destDir: 'example/build/v2'
 }];
 
-xmlQueue.forEach(function(doc) {
-  xmlCompiler.toJSON(doc)
-  .then(function(res) {
-    console.log('√ Successful compilation');
-  }).catch(function(err) {
-    console.log('X Oops something went wrong with this one!', err);
-  });
-});
+build(xmlQueue);

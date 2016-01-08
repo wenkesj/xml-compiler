@@ -1,0 +1,27 @@
+{
+  "div": {
+    "input": [
+      {
+        "@type": "hidden",
+        "@name": "instId",
+        "@value": 1234
+      },
+      {
+        "@type": "hidden",
+        "@name": "currency",
+        "@value": "GBP"
+      },
+      {
+        "@type": "hidden",
+        "@name": "amount",
+        "@value": 0
+      },
+      {
+        "@type": "hidden",
+        "@name": "name",
+        "@value": "CAPTURED"
+      }
+    ],
+    "@id": "form_container"
+  }
+}
