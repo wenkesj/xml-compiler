@@ -1,11 +1,11 @@
 {
   "name": "xml-compiler",
-  "version": "0.0.8",
-  "description": "A fast, promise based, XML and JSON compiler based on JXON",
+  "version": "1.0.0",
+  "description": "XML and JSON compiler based on JXON",
   "author": "Sam Wenke",
   "license": "MIT",
   "preferGlobal": true,
-  "main": "./compiler.js",
+  "main": "index.js",
   "dependencies": {
     "format-json": "^1.0.3",
     "formattor": "0.0.2",
